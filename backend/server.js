@@ -4,7 +4,6 @@
 const express = require("express");
 const http = require("http");
 const bodyParser = require("body-parser");
-const establishDBConnection = require("./Middlewares/db");
 
 
 // * Creating Express App
@@ -36,7 +35,6 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 8000;
 
 // * Establishing Database Connection
-establishDBConnection();
 
 // * Creating Server
 const server = http.createServer(app);
