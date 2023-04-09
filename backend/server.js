@@ -21,6 +21,10 @@ app.use(bodyParser.json());
 // ! Routes
 
 app.use("/api/auth", require("./api/auth"));
+app.use("/api/mode", require("./api/mode"));
+app.use("/api/location", require("./api/location"));
+app.use("/api/journey", require("./api/journey"));
+app.use("/api/booking", require("./api/booking"));
 
 // Basic Route
 app.get("/", (req, res) => {
@@ -39,9 +43,9 @@ const PORT = process.env.PORT || 8000;
 // * Establishing Database Connection
 client.connect((err) => {
   if (err) {
-    console.error('Database Connection error', err.stack)
+    console.error("Database Connection error", err.stack);
   } else {
-    console.log('Database Connected')
+    console.log("Database Connected");
   }
 });
 
