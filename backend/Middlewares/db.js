@@ -1,6 +1,6 @@
 // ? Establishes a connection to the database
 
-const { Pool } = require("pg");
+const { Client } = require('pg')
 
 const clientConfig = {
   user: process.env.DB_USER,
@@ -10,6 +10,6 @@ const clientConfig = {
   port: process.env.DB_PORT,
 };
 
-const pool = new Pool(clientConfig);
+const client = new Client(clientConfig);
 
-module.exports = pool;
+module.exports = client;

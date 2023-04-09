@@ -4,7 +4,7 @@
 const express = require("express");
 const http = require("http");
 const bodyParser = require("body-parser");
-
+const client = require("./Middlewares/db");
 
 // * Creating Express App
 const app = express();
@@ -19,6 +19,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // ! Routes
+
+app.use("/api/auth", require("./api/auth"));
 
 // Basic Route
 app.get("/", (req, res) => {
@@ -35,6 +37,13 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 8000;
 
 // * Establishing Database Connection
+client.connect((err) => {
+  if (err) {
+    console.error('Database Connection error', err.stack)
+  } else {
+    console.log('Database Connected')
+  }
+});
 
 // * Creating Server
 const server = http.createServer(app);
