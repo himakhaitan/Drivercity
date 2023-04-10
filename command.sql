@@ -4,7 +4,10 @@
 CREATE TABLE Users(
     first_name varchar(20),
     last_name varchar(20),
-    user_id SERIAL PRIMARY KEY
+    user_id SERIAL PRIMARY KEY,
+    email varchar(255) UNIQUE,
+    password varchar(1000),
+    role varchar(20)
 );
 
 -- Creating Modes Table
@@ -26,7 +29,7 @@ CREATE TABLE Locations(
 -- Creating Joureys Table
 CREATE TABLE Journeys(
     journey_id SERIAL PRIMARY KEY,
-    journey_time TIMESTAMP DEFAULT CURRENT_TIME,
+    journey_time TIMESTAMP,
     mode_id INTEGER,
     CONSTRAINT mode_id FOREIGN KEY (mode_id) REFERENCES Modes(mode_id),
     start_location INTEGER,
@@ -44,3 +47,7 @@ CREATE TABLE Bookings(
     user_id INTEGER,
     CONSTRAINT user_id FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );
+
+-- Creating ADMIN
+INSERT INTO USERS (first_name, last_name, email, password, role)
+values ('Himanshu', 'Khaitan', 'himanshukhaitan10@gmail.com', '$2a$10$ALqfEJdhe3qGWjOhTcvRoeSD2bI/3FJlNeKrWLexBVev93JVsb9qu', 'USER')

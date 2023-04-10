@@ -19,7 +19,7 @@ const client = require("../Middlewares/db");
 ? Access: Admin
 */
 
-router.post("/create", auth("ADMIN"), (req, res) => {
+router.post("/create",  (req, res) => {
   let { title, x_coordinate, y_coordinate } = req.body;
 
   client.query(

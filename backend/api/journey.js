@@ -19,7 +19,7 @@ const client = require("../Middlewares/db");
 ? Access: Admin
 */
 
-router.post("/create", auth("ADMIN"), (req, res) => {
+router.post("/create", (req, res) => {
   let { journey_time, mode_id, start_location, end_location } = req.body;
   // * Calculating Distance
   let journey_distance = 0;
@@ -98,6 +98,31 @@ router.post("/create", auth("ADMIN"), (req, res) => {
       }
     }
   );
+});
+
+/*
+? Method: GET
+? Route: api/journey/fetch
+? Description: Fetch All Journeys
+? Query Params: To, From, Date, Mode
+? Access: Everyone
+*/
+
+router.get("/fetch", async (req, res) => {
+  client.query("SELECT * FROM journeys", (err, result) => {
+    if (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ message: "Internal Server Error", success: false });
+    } else {
+      return res.status(200).json({
+        message: "Journeys Fetched",
+        success: true,
+        result: result.rows,
+      });
+    }
+  });
 });
 
 // * Exporting Router

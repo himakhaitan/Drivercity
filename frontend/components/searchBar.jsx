@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import React, { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-const SearchBar = () => {
+
+const SearchBar = ({ setLoading }) => {
   const [dept, setDept] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [mode, setMode] = useState("ANY");
@@ -34,6 +36,7 @@ const SearchBar = () => {
   //     console.log(dept.getDate());
   //     console.log(month[dept.getUTCMonth()]);
   //   }, [dept]);
+
   return (
     <>
       <main className="flex shadow-xl rounded-lg max-w-max flex-col">
@@ -160,7 +163,19 @@ const SearchBar = () => {
             )}
           </span>
           <div className="max-w-min flex  cursor-pointer font-bold">
-            Check Availability
+            <Link
+              href={{
+                pathname: "/search",
+                query: {
+                  from: "ABC",    
+                  to: "XYZ",
+                  date: dept.toLocaleDateString(),
+                  mode: mode,
+                },
+              }}
+            >
+              Check Availability
+            </Link>
           </div>
         </div>
       </main>
