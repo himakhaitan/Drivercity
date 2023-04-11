@@ -1,20 +1,26 @@
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import GLOBAL_CONTEXT from "../context/store";
 const SearchBar = () => {
+  const router = useRouter();
+  const { setBooking } = useContext(GLOBAL_CONTEXT);
   const [dept, setDept] = useState(new Date());
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [mode, setMode] = useState("ANY");
   const [showModeList, setShowModeList] = useState(false);
-  const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  // const days = [
+  //   "Monday",
+  //   "Tuesday",
+  //   "Wednesday",
+  //   "Thursday",
+  //   "Friday",
+  //   "Saturday",
+  //   "Sunday",
+  // ];
   const month = [
     "January",
     "February",
@@ -34,6 +40,7 @@ const SearchBar = () => {
   //     console.log(dept.getDate());
   //     console.log(month[dept.getUTCMonth()]);
   //   }, [dept]);
+
   return (
     <>
       <main className="flex shadow-xl rounded-lg max-w-max flex-col">
@@ -50,6 +57,7 @@ const SearchBar = () => {
               className={
                 "outline-none text-2xl font-bold text-gray-900  bg-transparent w-full"
               }
+              onChange={(e) => setFrom(e.target.value)}
               placeholder="Durgapur"
             />
           </span>
@@ -62,6 +70,7 @@ const SearchBar = () => {
               className={
                 "outline-none text-2xl focus:border-b-[2px] focus:border-black/50 font-bold text-gray-900  bg-transparent w-full"
               }
+              onChange={(e) => setTo(e.target.value)}
               placeholder="Durgapur"
             />
           </span>
@@ -159,7 +168,10 @@ const SearchBar = () => {
               </span>
             )}
           </span>
-          <div className="max-w-min flex  cursor-pointer font-bold">
+          <div
+            onClick={handleClick}
+            className="max-w-min flex  cursor-pointer font-bold"
+          >
             Check Availability
           </div>
         </div>

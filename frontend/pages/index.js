@@ -3,6 +3,7 @@ import React from "react";
 import Navbar from "../components/navbar";
 import SearchBar from "../components/searchBar";
 import Loader from "../components/loader";
+import Auth from "../components/auth";
 
 const Lading = () => {
   return (
@@ -25,7 +26,8 @@ const Lading = () => {
           </div>
         </main>
       </section>
-      <Loader />
+      <Auth />
+      {/* <Loader /> */}
     </>
   );
 };

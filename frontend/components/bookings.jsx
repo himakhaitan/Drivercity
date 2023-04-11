@@ -16,7 +16,7 @@ const Bookings = () => {
           </span>
           <span className="block flex flex-col">Fare : 7756 INR</span>
           <span className="block bg-black items-center justify-center rounded-lg h-16 flex flex-col">
-            Process to checkout
+            Checkout
           </span>
         </div>
       </main>
