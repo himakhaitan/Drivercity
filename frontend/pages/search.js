@@ -3,8 +3,12 @@ import Navbar from "../components/navbar";
 import SearchBar from "../components/searchBar";
 import JourneyCard from "../components/journeyCard";
 import Bookings from "../components/bookings";
+import { useRouter } from "next/router";
 
 const Search = () => {
+  const router = useRouter();
+  const { from, to, date, mode } = router.query;
+  console.log(from , to , date, mode);
   return (
     <>
       <section className="search-hero font-primary h-[300px] relative w-full">

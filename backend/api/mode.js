@@ -19,7 +19,7 @@ const client = require("../Middlewares/db");
 ? Access: Admin
 */
 
-router.post("/create", auth("ADMIN"), (req, res) => {
+router.post("/create", (req, res) => {
   let { title, base_fare, fare_per_km } = req.body;
 
   client.query(
@@ -42,6 +42,29 @@ router.post("/create", auth("ADMIN"), (req, res) => {
   );
 });
 
+/*
+? Method: GET
+? Route: api/mode/fetch
+? Description: Fetch All Modes
+? Access: Everyone
+*/
+
+router.get("/fetch", (req, res) => {
+  client.query("SELECT * FROM modes", (err, result) => {
+    if (err) {
+      console.log(err);
+      res
+        .status(500)
+        .json({ message: "Internal Server Error", success: false });
+    } else {
+      res.status(200).json({
+        message: "Modes Fetched",
+        success: true,
+        result: result.rows,
+      });
+    }
+  });
+});
 
 // * Exporting Router
 

@@ -19,7 +19,7 @@ const client = require("../Middlewares/db");
 ? Access: Admin
 */
 
-router.post("/create", auth("ADMIN"), (req, res) => {
+router.post("/create", (req, res) => {
   let { journey_time, mode_id, start_location, end_location } = req.body;
   // * Calculating Distance
   let journey_distance = 0;
@@ -98,6 +98,116 @@ router.post("/create", auth("ADMIN"), (req, res) => {
       }
     }
   );
+});
+
+/*
+? Method: GET
+? Route: api/journey/fetch
+? Description: Fetch All Journeys
+? Query Params: To, From, Date, Mode
+? Access: Everyone
+*/
+
+router.get("/fetch", async (req, res) => {
+  let { to, from, date, mode } = req.query;
+  let journeys = [];
+
+  if (mode != "ANY") {
+    // * Fetching MODE ID
+
+    let mode_id = 0;
+
+    client.query(
+      "SELECT * FROM modes WHERE title = $1",
+      [mode],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          return res
+            .status(500)
+            .json({ message: "Internal Server Error", success: false });
+        } else {
+          mode_id = result.rows[0].mode_id;
+        }
+      }
+    );
+    
+    client.query(
+      "SELECT * FROM journeys WHERE mode_id = $1",
+      [mode_id],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          return res
+            .status(500)
+            .json({ message: "Internal Server Error", success: false });
+        } else {
+          journeys = result.rows;
+        }
+      }
+    );
+  } else {
+    client.query("SELECT * FROM journeys", (err, result) => {
+      if (err) {
+        console.log(err);
+        return res
+          .status(500)
+          .json({ message: "Internal Server Error", success: false });
+      } else {
+        journeys = result.rows;
+      }
+    });
+  }
+
+  // * Fetch Locations
+
+  let start_location = 0;
+  let end_location = 0;
+
+  client.query(
+    "SELECT * FROM locations WHERE title = $1",
+    [from],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res
+          .status(500)
+          .json({ message: "Internal Server Error", success: false });
+      } else {
+        start_location = result.rows[0].location_id;
+      }
+    }
+  );
+
+  client.query(
+    "SELECT * FROM locations WHERE title = $1",
+    [to],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+        return res
+          .status(500)
+          .json({ message: "Internal Server Error", success: false });
+      } else {
+        end_location = result.rows[0].location_id;
+      }
+    }
+  );
+
+  let filteredJourneys = journeys.filter((journey) => {
+    if (
+      journey.start_location == start_location &&
+      journey.end_location == end_location
+    ) {
+      return true;
+    }
+  });
+
+  return res.status(200).json({
+    message: "Journeys Fetched",
+    success: true,
+    result: filteredJourneys,
+  });
 });
 
 // * Exporting Router

@@ -1,11 +1,13 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import SearchBar from "../components/searchBar";
 import Loader from "../components/loader";
 import Auth from "../components/auth";
 
 const Lading = () => {
+  const [loading, setLoading] = useState(false);
+
   return (
     <>
       <section className="w-full font-primary hero relative h-[100vh]">
@@ -22,12 +24,12 @@ const Lading = () => {
               explore like a local.These are moments you will never forget.
             </div>
             <div className="h-[100px]"></div>
-            <SearchBar />
+            <SearchBar setLoading={setLoading} />
           </div>
         </main>
       </section>
       <Auth />
-      {/* <Loader /> */}
+      {loading && <Loader />}
     </>
   );
 };

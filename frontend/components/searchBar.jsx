@@ -3,8 +3,9 @@ import React, { useContext, useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import GLOBAL_CONTEXT from "../context/store";
-const SearchBar = () => {
-  const router = useRouter();
+import Link from "next/link";
+
+const SearchBar = ({ setLoading }) => {
   const { setBooking } = useContext(GLOBAL_CONTEXT);
   const [dept, setDept] = useState(new Date());
   const [from, setFrom] = useState("");
@@ -168,11 +169,20 @@ const SearchBar = () => {
               </span>
             )}
           </span>
-          <div
-            onClick={handleClick}
-            className="max-w-min flex  cursor-pointer font-bold"
-          >
-            Check Availability
+          <div className="max-w-min flex  cursor-pointer font-bold">
+            <Link
+              href={{
+                pathname: "/search",
+                query: {
+                  from: "ABC",
+                  to: "XYZ",
+                  date: dept.toLocaleDateString(),
+                  mode: mode,
+                },
+              }}
+            >
+              Check Availability
+            </Link>
           </div>
         </div>
       </main>

@@ -19,7 +19,7 @@ const client = require("../Middlewares/db");
 ? Access: USER
 */
 
-router.post("/create", auth("USER"), (req, res) => {
+router.post("/create",  (req, res) => {
   let { journey_id } = req.body;
 
   // * Checking if Journey Exists
