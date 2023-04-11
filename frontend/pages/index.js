@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Navbar from "../components/navbar";
 import SearchBar from "../components/searchBar";
 import Loader from "../components/loader";
-import Auth from "../components/auth";
 
 const Lading = () => {
   const [loading, setLoading] = useState(false);
@@ -12,8 +11,8 @@ const Lading = () => {
     <>
       <section className="w-full font-primary hero relative h-[100vh]">
         <div className="overlay absolute top-0 w-full h-[100vh] bg-gradient-to-b from-black/10 to-black/90 -z-10"></div>
+        <Navbar />
         <main className="container mx-auto">
-          <Navbar />
           <div className="flex flex-col gap-5 justify-center h-[700px]">
             <div className="text-7xl font-semibold text-white max-w-[800px]">
               Travel Without Limits
@@ -28,7 +27,6 @@ const Lading = () => {
           </div>
         </main>
       </section>
-      <Auth />
       {loading && <Loader />}
     </>
   );

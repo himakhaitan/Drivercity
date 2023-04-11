@@ -1,4 +1,5 @@
 import React, { Component, useEffect, useState } from "react";
+import { auth, registerAuth } from "../utils";
 
 const GLOBAL_CONTEXT = React.createContext();
 
@@ -12,19 +13,45 @@ export const Provider = ({ children }) => {
     _isReadToCheckOut: false,
   });
 
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({ _isAuthenticated: false });
 
   const checkout = async () => {
     if (booking._isReadToCheckOut) {
     }
   };
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const handleAuth = async () => {
+    setIsAuthenticating(true);
+    let res = await auth(user);
+    if (res && res.token) {
+      localStorage.setItem("token", res.token);
+    }
+    setIsAuthenticating(false);
+  };
 
-  const handleAuth = () => {};
+  // const registerUser = () => {};
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setUser({
+        ...user,
+        _isAuthenticated: true,
+      });
+    }
+  }, []);
 
   return (
-    <GLOBAL_CONTEXT.Provider value={{ booking, setBooking, user, setUser }}>
+    <GLOBAL_CONTEXT.Provider
+      value={{
+        isAuthenticating,
+        setIsAuthenticating,
+        handleAuth,
+        booking,
+        setBooking,
+        user,
+        setUser,
+      }}
+    >
       {children}
     </GLOBAL_CONTEXT.Provider>
   );
