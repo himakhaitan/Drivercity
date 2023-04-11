@@ -1,7 +1,17 @@
 import Image from "next/image";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
+import GLOBAL_CONTEXT from "../context/store";
+import Auth from "./auth";
+import Loader from "./loader";
 
 const Navbar = () => {
+  const { user, isAuthenticating } = useContext(GLOBAL_CONTEXT);
+  const [authenticateUser, setAuthenticateUser] = useState(false);
+  useEffect(() => {
+    if (isAuthenticating && !user._isAuthenticated) {
+      setAuthenticateUser(false);
+    }
+  }, [isAuthenticating]);
   return (
     <>
       <main className="container flex items-center justify-between mx-auto">
@@ -9,11 +19,22 @@ const Navbar = () => {
           <Image src={"/logo.png"} width={120} height={52} />
         </div>
         <div className="flex items-center justify-center gap-8">
-          <button className="block bg-black/10 backdrop-blur-xl text-white w-[100px] h-10 rounded-[5px] ">
-            Login
-          </button>
+          {!user._isAuthenticated ? (
+            <button
+              onClick={() => setAuthenticateUser(true)}
+              className="block bg-white/50 hover:bg-white text-black w-[100px] h-10 rounded-[5px] "
+            >
+              Login
+            </button>
+          ) : (
+            <>Logged in</>
+          )}
         </div>
       </main>
+      {authenticateUser && !isAuthenticating && <Auth />}
+      {isAuthenticating && (
+        <Loader message={"Hold tight while we are loggin you in!"} />
+      )}
     </>
   );
 };
