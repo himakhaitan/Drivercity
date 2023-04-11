@@ -174,10 +174,10 @@ const SearchBar = ({ setLoading }) => {
               href={{
                 pathname: "/search",
                 query: {
-                  from: "ABC",
-                  to: "XYZ",
+                  from: from,
+                  to: to,
                   date: dept.toLocaleDateString(),
-                  mode: mode,
+                  mode: mode.toLowerCase(),
                 },
               }}
             >

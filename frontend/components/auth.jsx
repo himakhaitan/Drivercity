@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import GLOBAL_CONTEXT from "./context/store";
+import GLOBAL_CONTEXT from "../context/store";
 
 const Auth = () => {
   const { setUser, user } = useContext(GLOBAL_CONTEXT);

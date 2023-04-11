@@ -1,14 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/navbar";
 import SearchBar from "../components/searchBar";
 import JourneyCard from "../components/journeyCard";
+import axios from "axios";
 import Bookings from "../components/bookings";
 import { useRouter } from "next/router";
+import { BASE_URL } from "../constants";
+import Loader from "../components/loader";
 
 const Search = () => {
+  const [journeys, setJourneys] = useState([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { from, to, date, mode } = router.query;
-  console.log(from , to , date, mode);
+  const { from, to, mode } = router.query;
+
+  useEffect(() => {
+    const fetchJourneys = async () => {
+      let response = await axios.get(
+        `${BASE_URL}/journey/fetch?from=${from}&to=${to}&mode=${mode}`
+      );
+      setJourneys(response.data.result);
+    };
+    fetchJourneys();
+    setLoading(false);
+  }, [from, to, mode]);
+
   return (
     <>
       <section className="search-hero font-primary h-[300px] relative w-full">
@@ -23,18 +39,26 @@ const Search = () => {
         <main className="grid grid-cols-5 place-items-center">
           <div className="font-bold text-base text-gray-600">Mode</div>
           <div className="font-bold text-base text-gray-600">Departure</div>
-          <div className="font-bold text-base text-gray-600">Arrival</div>
+          <div className="font-bold text-base text-gray-600">To</div>
           <div className="font-bold text-base text-gray-600">Fare</div>
         </main>
-        <JourneyCard
-          mode={"Flight"}
-          fare={7227}
-          depart={"12:11"}
-          arrival={"15:30"}
-        />
+        {journeys.map((journey) => {
+          return (
+            <JourneyCard
+              key={journey.journey_id}
+              mode={`${journey.means
+                .charAt(0)
+                .toUpperCase()}${journey.means.slice(1)}`}
+              fare={journey.fare}
+              depart={journey.journey_time.slice(0, 10)}
+              arrival={journey.endtitle}
+            />
+          );
+        })}
 
         <Bookings />
       </section>
+      {loading && <Loader />}
     </>
   );
 };

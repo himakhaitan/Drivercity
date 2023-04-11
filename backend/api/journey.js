@@ -109,105 +109,43 @@ router.post("/create", (req, res) => {
 */
 
 router.get("/fetch", async (req, res) => {
-  let { to, from, date, mode } = req.query;
-  let journeys = [];
+  let { to, from, mode } = req.query;
 
-  if (mode != "ANY") {
-    // * Fetching MODE ID
+  if (mode == "ANY" || mode == undefined || mode == "any") {
+    let QUERY_STRING =
+      "SELECT * FROM (SELECT *, m.title as means FROM Modes m, (SELECT *, l1.title as starttitle, l2.title as endtitle FROM JOURNEYS j, LOCATIONS l1, LOCATIONS l2 WHERE j.start_location = l1.location_id and j.end_location = l2.location_id) a WHERE m.mode_id = a.mode_id) a WHERE starttitle = $1 and endtitle = $2";
 
-    let mode_id = 0;
-
-    client.query(
-      "SELECT * FROM modes WHERE title = $1",
-      [mode],
-      (err, result) => {
-        if (err) {
-          console.log(err);
-          return res
-            .status(500)
-            .json({ message: "Internal Server Error", success: false });
-        } else {
-          mode_id = result.rows[0].mode_id;
-        }
+    client.query(QUERY_STRING, [from, to], (err, result) => {
+      if (err) {
+        console.log(err);
+        return res
+          .status(500)
+          .json({ message: "Internal Server Error", success: false });
       }
-    );
-    
-    client.query(
-      "SELECT * FROM journeys WHERE mode_id = $1",
-      [mode_id],
-      (err, result) => {
-        if (err) {
-          console.log(err);
-          return res
-            .status(500)
-            .json({ message: "Internal Server Error", success: false });
-        } else {
-          journeys = result.rows;
-        }
-      }
-    );
+      return res.status(200).json({
+        message: "Journeys Fetched",
+        success: true,
+        result: result.rows,
+      });
+    });
   } else {
-    client.query("SELECT * FROM journeys", (err, result) => {
+    let QUERY_STRING =
+      "SELECT * FROM (SELECT *, m.title as means FROM Modes m, (SELECT *, l1.title as starttitle, l2.title as endtitle FROM JOURNEYS j, LOCATIONS l1, LOCATIONS l2 WHERE j.start_location = l1.location_id and j.end_location = l2.location_id) a WHERE m.mode_id = a.mode_id) a WHERE starttitle = $1 and endtitle = $2 and means = $3";
+    client.query(QUERY_STRING, [from, to, mode], (err, result) => {
       if (err) {
         console.log(err);
         return res
           .status(500)
           .json({ message: "Internal Server Error", success: false });
       } else {
-        journeys = result.rows;
+        return res.status(200).json({
+          message: "Journeys Fetched",
+          success: true,
+          result: result.rows,
+        });
       }
     });
   }
-
-  // * Fetch Locations
-
-  let start_location = 0;
-  let end_location = 0;
-
-  client.query(
-    "SELECT * FROM locations WHERE title = $1",
-    [from],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        return res
-          .status(500)
-          .json({ message: "Internal Server Error", success: false });
-      } else {
-        start_location = result.rows[0].location_id;
-      }
-    }
-  );
-
-  client.query(
-    "SELECT * FROM locations WHERE title = $1",
-    [to],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-        return res
-          .status(500)
-          .json({ message: "Internal Server Error", success: false });
-      } else {
-        end_location = result.rows[0].location_id;
-      }
-    }
-  );
-
-  let filteredJourneys = journeys.filter((journey) => {
-    if (
-      journey.start_location == start_location &&
-      journey.end_location == end_location
-    ) {
-      return true;
-    }
-  });
-
-  return res.status(200).json({
-    message: "Journeys Fetched",
-    success: true,
-    result: filteredJourneys,
-  });
 });
 
 // * Exporting Router

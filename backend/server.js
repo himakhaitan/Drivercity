@@ -5,12 +5,14 @@ const express = require("express");
 const http = require("http");
 const bodyParser = require("body-parser");
 const client = require("./Middlewares/db");
+const cors = require("cors");
 
 // * Creating Express App
 const app = express();
 
 // * Middlewares
 app.use(express.json());
+app.use(cors());
 
 // * PARSE application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));

@@ -19,7 +19,7 @@ const client = require("../Middlewares/db");
 ? Access: USER
 */
 
-router.post("/create",  (req, res) => {
+router.post("/create", (req, res) => {
   let { journey_id } = req.body;
 
   // * Checking if Journey Exists
@@ -59,6 +59,36 @@ router.post("/create",  (req, res) => {
             }
           );
         }
+      }
+    }
+  );
+});
+
+/*
+? Method: POST
+? Route: api/booking/fetch
+? Description: Fetch Bookings
+? Access: USER
+*/
+
+router.get("/fetch", auth("USER"), (req, res) => {
+  let { user_id } = req.userData;
+
+  client.query(
+    "SELECT *, l1.title as starttitle, l2.title as endtitle FROM bookings b, journeys j, locations l1, locations l2 WHERE user_id = $1 and b.journey_id = j.journey_id and l1.location_id = start_location and l2.location_id = end_location;",
+    [user_id],
+    (err, result) => {
+      if (err) {
+        return res.status(500).send({
+          success: false,
+          message: "Server Error",
+        });
+      } else {
+        return res.send({
+          success: true,
+          message: "Bookings Fetched",
+          data: result.rows,
+        });
       }
     }
   );
