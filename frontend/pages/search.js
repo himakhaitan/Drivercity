@@ -10,9 +10,14 @@ import Loader from "../components/loader";
 
 const Search = () => {
   const [journeys, setJourneys] = useState([]);
+  const [isBooking, setIsBooking] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { from, to, mode } = router.query;
+
+  const bookHandler = (e) => {
+    setIsBooking(true);
+  };
 
   useEffect(() => {
     const fetchJourneys = async () => {
@@ -50,13 +55,14 @@ const Search = () => {
                 .charAt(0)
                 .toUpperCase()}${journey.means.slice(1)}`}
               fare={journey.fare}
+              from={journey.starttitle}
               depart={journey.journey_time.slice(0, 10)}
               arrival={journey.endtitle}
+              handler={bookHandler}
+              isBooking={isBooking}
             />
           );
         })}
-
-        <Bookings />
       </section>
       {loading && <Loader />}
     </>

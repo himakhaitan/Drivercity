@@ -8,6 +8,8 @@ export const Provider = ({ children }) => {
     from: null,
     to: null,
     mode: null,
+    fare: null,
+    depart: null,
     transport_id: null,
     _date: new Date(),
     _isReadToCheckOut: false,
