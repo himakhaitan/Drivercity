@@ -13,7 +13,7 @@ export const Provider = ({ children }) => {
     _isReadToCheckOut: false,
   });
 
-  const [user, setUser] = useState({ _isAuthenticated: false });
+  const [user, setUser] = useState({ _isAuthenticated: false, name: "" });
 
   const checkout = async () => {
     if (booking._isReadToCheckOut) {
@@ -23,8 +23,14 @@ export const Provider = ({ children }) => {
   const handleAuth = async () => {
     setIsAuthenticating(true);
     let res = await auth(user);
+    console.log(res);
     if (res && res.token) {
       localStorage.setItem("token", res.token);
+      setUser({
+        ...user,
+        _isAuthenticated: true,
+        name: res.name,
+      });
     }
     setIsAuthenticating(false);
   };

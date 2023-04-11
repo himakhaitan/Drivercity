@@ -70,7 +70,9 @@ router.post("/login", (req, res) => {
           .json({ message: "Internal Server Error", success: false });
       } else {
         if (result.rows.length === 0) {
-          return res.status(404).json({ message: "User Not Found", success: false });
+          return res
+            .status(404)
+            .json({ message: "User Not Found", success: false });
         } else {
           // * Comparing Passwords
           if (bcrypt.compareSync(password, result.rows[0].password)) {
@@ -85,6 +87,7 @@ router.post("/login", (req, res) => {
               message: "Login Successful",
               success: true,
               token: `Bearer ${token}`,
+              name: result.rows[0].first_name + " " + result.rows[0].last_name,
             });
           } else {
             return res

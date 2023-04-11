@@ -27,7 +27,7 @@ const Navbar = () => {
               Login
             </button>
           ) : (
-            <>Logged in</>
+            <>{user.name}</>
           )}
         </div>
       </main>

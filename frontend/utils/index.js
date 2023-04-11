@@ -11,6 +11,7 @@ export const auth = async (user) => {
       password: user.password,
     });
     console.log(res);
+    return { ...res.data };
   } catch (error) {
     console.log(error);
   }
